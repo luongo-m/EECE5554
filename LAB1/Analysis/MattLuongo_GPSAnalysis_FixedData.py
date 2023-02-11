@@ -120,8 +120,8 @@ walk_HDOP = numpy.zeros(len(walk_GPGGA_Data))
 walk_UTM_Northing = numpy.zeros(len(walk_GPGGA_Data))
 walk_UTM_Easting = numpy.zeros(len(walk_GPGGA_Data))
 
-# walk_UTM_N_Error = numpy.zeros(len(walk_GPGGA_Data))
-# walk_UTM_E_Error = numpy.zeros(len(walk_GPGGA_Data))
+walk_UTM_N_Scaled = numpy.zeros(len(walk_GPGGA_Data))
+walk_UTM_E_Scaled = numpy.zeros(len(walk_GPGGA_Data))
 
 while i < len(walk_GPGGA_Data):
     bufferline = walk_GPGGA_Data[i]
@@ -145,8 +145,8 @@ while i < len(walk_GPGGA_Data):
     walk_UTM_Northing[i] = utm_buffer[1]
     walk_UTM_Easting[i] = utm_buffer[0]
 
-    # walk_UTM_N_Corrected[i] = walk_UTM_Northing[i] - walk_Known_UTM[1]
-    # walk_UTM_E_Corrected[i] = walk_UTM_Easting[i] - walk_Known_UTM[0]
+    walk_UTM_N_Scaled[i] = walk_UTM_Northing[i] - walk_UTM_Northing[0]
+    walk_UTM_E_Scaled[i] = walk_UTM_Easting[i] - walk_UTM_Easting[0]
 
     i = i + 1
 
@@ -193,11 +193,12 @@ while i < len(alley_UTM_N_Error):
 
 [m, b] = np.polyfit(walk_UTM_Easting, walk_UTM_Northing, 1)
 walk_BestFit = np.polyval([m, b], walk_UTM_Easting)
+walk_BestFit_Scaled = numpy.asarray(walk_BestFit - walk_BestFit[0])
 
 i = 0
-walk_Error = numpy.zeros(len(walk_UTM_Northing))
-while i < len(walk_UTM_Northing):
-    walk_Error[i] = walk_UTM_Northing[i] - walk_BestFit[i]
+walk_Error = numpy.zeros(len(walk_UTM_N_Scaled))
+while i < len(walk_UTM_N_Scaled):
+    walk_Error[i] = walk_UTM_N_Scaled[i] - walk_BestFit_Scaled[i]
     i = i + 1
 
 open_AverageError = numpy.average(open_Error)
@@ -225,8 +226,8 @@ plt.ylabel('UTM Northing (m)')
 plt.savefig('/home/mattluongo/PycharmProjects/GPSDriverAnalysis/FixedAnalysis/Alley_UTM_NorthVsEast')
 
 plt.figure(3)
-plt.scatter(walk_UTM_Easting, walk_UTM_Northing)
-plt.plot(walk_UTM_Easting, walk_BestFit)
+plt.scatter(walk_UTM_E_Scaled, walk_UTM_N_Scaled)
+plt.plot(walk_UTM_E_Scaled, walk_BestFit_Scaled)
 plt.grid(True)
 plt.title('UTM Northing vs. Easting Data for a ~300 m Walk')
 plt.xlabel('UTM Easting (m)')
