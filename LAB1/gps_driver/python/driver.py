@@ -109,7 +109,8 @@ if __name__ == '__main__':
                 # to compact this into a function
                 print(buffer)
                 print(buffer[0:6])
-                if buffer.startswith('$GPGGA', 0, 6):
+                # if buffer.startswith('$GPGGA', 0, 6):
+                if "GPGGA" in buffer:
                     # definition, but i didn't want to
                     # print('GPGGA line detected')
                     # print(buffer)
@@ -120,11 +121,11 @@ if __name__ == '__main__':
                     latitude_raw = GPGGA_data[2]
                     longitude_raw = GPGGA_data[4]
 
-                    latitude_deg = int(latitude_raw[0:2]) + float(latitude_raw[2:6]) / 60
+                    latitude_deg = float(latitude_raw[0:2]) + float(latitude_raw[2:]) / 60
                     if GPGGA_data[3] == 'S':
                         latitude_deg = -1 * latitude_deg
 
-                    longitude_deg = int(longitude_raw[0:3]) + float(latitude_raw[3:7]) / 60
+                    longitude_deg = float(longitude_raw[0:3]) + float(latitude_raw[3:]) / 60
                     if GPGGA_data[5] == 'W':
                         longitude_deg = -1 * longitude_deg
 
