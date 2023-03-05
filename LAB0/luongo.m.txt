@@ -1,3 +1,0 @@
-I have successfully installed Oracle VM on my home PC. I also installed it on my laptop, I overlooked the bios setting for VT.
-
-Git (CLI) is installed. I am ready to use Git and GitHub.
