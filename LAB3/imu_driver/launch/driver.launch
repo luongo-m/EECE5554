@@ -1,0 +1,12 @@
+<launch>
+    <arg name="port" default=""/>
+    <arg name="baud" default="115200"/>
+    <arg name="sample" default="40.0"/>
+    <node name="convert_to_quaternion" pkg="imu_driver" type="convert_to_quaternion.py">
+    </node>
+    <node name="imu_driver" pkg="imu_driver" type="driver.py">
+        <param name="port" type="string" value="$(arg port)"/>
+        <param name="baudrate" type="int" value="$(arg baud)"/>
+        <param name="sampling_rate" type="double" value="$(arg sample)"/>
+    </node>
+</launch>
